@@ -113,7 +113,9 @@
       +       '</div>'
       +       '<div class="datetime-container"></div>'
       +    '</div>'
-      +    '<div class="footer"></div>'
+      +    '<div class="footer">'
+      +       '<span>返回今天</span>'
+      +    '</div>'
       + '</div>';
 
    var monTmpl = '<table cellpadding="0" cellspacing="0" style="display: none">'
@@ -173,7 +175,6 @@
    }
 
    var toDatetime = function(date) {
-      console.log(date);
       var _this = this;
       date = new Date(date.getTime());
 
@@ -193,6 +194,11 @@
                   // if($this.hasClass("tobefore") || $this.hasClass("toafter")) {
                   //    toDatetime.apply(_this, [dd]);
                   // }
+
+                  var evt = $.Event("datetime");
+                  evt.datetime = new Date(dd.getTime());
+                  evt.datetimeText = dd.format(_this.format);
+                  _this.$element.trigger(evt);
                });
          }
 
@@ -242,6 +248,12 @@
                      // toDatetime.apply(_this, [dd]);
                      handleView.apply(_this, [dd, 1]);
                   }
+                  else {
+                     var evt = $.Event("datetime");
+                     evt.datetime = new Date(dd.getTime());
+                     evt.datetimeText = dd.format(_this.format);
+                     _this.$element.trigger(evt);
+                  }
 
                   // if($this.hasClass("tobefore") || $this.hasClass("toafter")) {
                   //    toDatetime.apply(_this, [dd]);
@@ -287,6 +299,12 @@
                   if(_this.init.mode != _this.mode) {
                      // toDatetime.apply(_this, [dd]);
                      handleView.apply(_this, [dd, 1]);
+                  }
+                  else {
+                     var evt = $.Event("datetime");
+                     evt.datetime = new Date(dd.getTime());
+                     evt.datetimeText = dd.format(_this.format);
+                     _this.$element.trigger(evt);
                   }
 
                   // if($this.hasClass("tobefore") || $this.hasClass("toafter")) {
@@ -357,15 +375,22 @@
       this.$handleDatetimeDisplay.on("click", function() {
          handleView.apply(_this, [$(this).data("date"), -1]);
       });
+
+      this.$toToday.on("click", function() {
+         var idx = modes.indexOf(_this.init.mode);
+         var nidx = modes.indexOf(_this.mode);
+         handleView.apply(_this, [new Date(), idx - nidx]);
+      });
    }
 
    var Datetimepicker = function(element, options) {
       var _this = this;
 
-      this.date = options.date || new Date();
+      this.date = options.date || new Date('2015-10-20 20:00:00');
       this.format = options.format || "yyyy-MM-dd HH:mm";
       this.mode = options.mode || "month";
       this.container = options.container || "body";
+      this.$element = $(element);
       this.$baseNode = $(baseTmpl).appendTo(this.container);
       this.$timeDisplay = this.$baseNode.find(".header .time");
       this.$dateDisplay = this.$baseNode.find(".header .date");
@@ -373,6 +398,7 @@
       this.$upHandler = this.$baseNode.find(".body .handler-container .handler .up-handler");
       this.$downHandler = this.$baseNode.find(".body .handler-container .handler .down-handler");
       this.$datetimeContainer = this.$baseNode.find(".body .datetime-container");
+      this.$toToday = this.$baseNode.find(".footer span");
       this.init = {
          mode: this.mode
       };
