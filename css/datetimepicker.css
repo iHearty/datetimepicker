@@ -104,6 +104,21 @@
    cursor: pointer;
 }
 
+.datetimepicker .body .datetime-container table tbody td.disabled {
+   position: relative;
+}
+
+.datetimepicker .body .datetime-container table tbody td.disabled:after {
+   content: " ";
+   width: 40%;
+   height: 1px;
+   background-color: #e67e22;
+   position: absolute;
+   top: 50%;
+   left: 50%;
+   -webkit-transform: translate(-50%, -50%) rotate(45deg);
+}
+
 .datetimepicker .body .datetime-container table.year td, .datetimepicker .body .datetime-container table.decade td {
    width: 25%;
 }

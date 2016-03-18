@@ -11,13 +11,13 @@
          "S": this.getMilliseconds() //毫秒
       };
       var week = {
-         "0": "/u65e5",
-         "1": "/u4e00",
-         "2": "/u4e8c",
-         "3": "/u4e09",
-         "4": "/u56db",
-         "5": "/u4e94",
-         "6": "/u516d"
+         "0": "\u65e5",
+         "1": "\u4e00",
+         "2": "\u4e8c",
+         "3": "\u4e09",
+         "4": "\u56db",
+         "5": "\u4e94",
+         "6": "\u516d"
       };
 
       if(/(y+)/.test(fmt)) {
@@ -25,7 +25,7 @@
       }
 
       if(/(E+)/.test(fmt)) {
-         fmt = fmt.replace(RegExp.$1, ((RegExp.$1.length > 1) ? (RegExp.$1.length > 2 ? "/u661f/u671f" : "/u5468") : "") + week[this.getDay() + ""]);
+         fmt = fmt.replace(RegExp.$1, ((RegExp.$1.length > 1) ? (RegExp.$1.length > 2 ? "\u661f\u671f" : "\u5468") : "") + week[this.getDay() + ""]);
       }
 
       for(var k in o) {
@@ -187,8 +187,13 @@
 
          if(!this.$mHolder) {
             this.$mHolder = $(monTmpl).appendTo(this.$datetimeContainer)
-               .delegate("td", "click", function() {
+               .delegate("tbody td", "click", function() {
                   var $this = $(this);
+
+                  if($this.hasClass("disabled")) {
+                     return;
+                  }
+
                   var dd = $this.data("date");
 
                   // if($this.hasClass("tobefore") || $this.hasClass("toafter")) {
@@ -215,9 +220,10 @@
 
          $.each(this.$mHolder.find("tbody td"), function(idx, td) {
             var $td = $(td);
-            $td.data("date", new Date(date.getTime()))
+            var dd = new Date(date.getTime());
+            $td.data("date", dd)
                .html(date.getDate())
-               .removeClass("tobefore toafter selected");;
+               .removeClass("tobefore toafter disabled selected");;
 
             if(_this.date.format("yyyy-MM-dd") == date.format("yyyy-MM-dd")) {
                $td.addClass("selected");
@@ -228,6 +234,14 @@
             }
             else if(idx > offset + days - 1) {
                $td.addClass("toafter");
+            }
+
+            if(_this.max && dd > _this.max) {
+               $td.addClass("disabled");
+            }
+
+            if(_this.min && dd < _this.min) {
+               $td.addClass("disabled");
             }
 
             date.add("d", 1);
@@ -249,6 +263,10 @@
                      handleView.apply(_this, [dd, 1]);
                   }
                   else {
+                     if($this.hasClass("disabled")) {
+                        return;
+                     }
+
                      var evt = $.Event("datetime");
                      evt.datetime = new Date(dd.getTime());
                      evt.datetimeText = dd.format(_this.format);
@@ -265,9 +283,10 @@
 
          $.each(this.$yHolder.find("td"), function(idx, td) {
             var $td = $(td);
-            $td.data("date", new Date(date.getTime()))
+            var dd = new Date(date.getTime());
+            $td.data("date", dd)
                .html(date.getMonth() + 1 + "月")
-               .removeClass("tobefore toafter selected");
+               .removeClass("tobefore toafter disabled selected");
 
             if(_this.date.format("yyyy-MM") == date.format("yyyy-MM")) {
                $td.addClass("selected");
@@ -278,6 +297,14 @@
             }
             else if(idx > 13) {
                $td.addClass("toafter");
+            }
+
+            if(_this.max && dd > _this.max) {
+               $td.addClass("disabled");
+            }
+
+            if(_this.min && dd < _this.min) {
+               $td.addClass("disabled");
             }
 
             date.add("m", 1);
@@ -317,9 +344,10 @@
 
          $.each(this.$dHolder.find("td"), function(idx, td) {
             var $td = $(td);
-            $td.data("date", new Date(date.getTime()))
+            var dd = new Date(date.getTime());
+            $td.data("date", dd)
                .html(date.getFullYear())
-               .removeClass("tobefore toafter selected");
+               .removeClass("tobefore toafter disabled selected");
 
             if(_this.date.getFullYear() == date.getFullYear()) {
                $td.addClass("selected");
@@ -330,6 +358,14 @@
             }
             else if(idx > 11) {
                $td.addClass("toafter");
+            }
+
+            if(_this.max && dd > _this.max) {
+               $td.addClass("disabled");
+            }
+
+            if(_this.min && dd < _this.min) {
+               $td.addClass("disabled");
             }
 
             date.add("y", 1);
@@ -386,9 +422,11 @@
    var Datetimepicker = function(element, options) {
       var _this = this;
 
-      this.date = options.date || new Date('2015-10-20 20:00:00');
+      this.date = options.date || new Date();
       this.format = options.format || "yyyy-MM-dd HH:mm";
       this.mode = options.mode || "month";
+      this.max = options.max || new Date('2016-03-20 00:00:00');
+      this.min = options.min || new Date('2016-03-01 00:00:00');
       this.container = options.container || "body";
       this.$element = $(element);
       this.$baseNode = $(baseTmpl).appendTo(this.container);
@@ -405,6 +443,15 @@
 
       initHandle.apply(this);
       toDatetime.apply(this, [this.date]);
+
+      var updateDatetime = function() {
+         var dd = new Date();
+         _this.$timeDisplay.html(dd.format("HH:mm:ss"));
+         _this.$dateDisplay.html(dd.format("yyyy年M月d日, EEE"));
+      }
+
+      updateDatetime();
+      setInterval(updateDatetime, 1000);
    }
 
    $.fn.datetimepicker = function(options) {
