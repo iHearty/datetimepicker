@@ -415,7 +415,9 @@
       this.$toToday.on("click", function() {
          var idx = modes.indexOf(_this.init.mode);
          var nidx = modes.indexOf(_this.mode);
-         handleView.apply(_this, [new Date(), idx - nidx]);
+         var dd = new Date();
+         dd.setHours(0, 0, 0, 0);
+         handleView.apply(_this, [dd, idx - nidx]);
       });
    }
 
@@ -426,7 +428,7 @@
       this.format = options.format || "yyyy-MM-dd HH:mm";
       this.mode = options.mode || "month";
       this.max = options.max || new Date('2016-03-20 00:00:00');
-      this.min = options.min || new Date('2016-03-01 00:00:00');
+      this.min = options.min || new Date('2016-02-01 00:00:00');
       this.container = options.container || "body";
       this.$element = $(element);
       this.$baseNode = $(baseTmpl).appendTo(this.container);
@@ -440,6 +442,15 @@
       this.init = {
          mode: this.mode
       };
+
+      this.date.setHours(0, 0, 0, 0);
+
+      if(this.mode == "year") {
+         this.date.setDate(0);
+      }
+      else if(this.mode == "decade") {
+         this.setMonth(0, 0);
+      }
 
       initHandle.apply(this);
       toDatetime.apply(this, [this.date]);
