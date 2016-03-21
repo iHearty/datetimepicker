@@ -423,12 +423,34 @@
 
    var Datetimepicker = function(element, options) {
       var _this = this;
-
-      this.date = options.date || new Date();
-      this.format = options.format || "yyyy-MM-dd HH:mm";
       this.mode = options.mode || "month";
       this.max = options.max || new Date('2016-03-20 00:00:00');
       this.min = options.min || new Date('2016-02-01 00:00:00');
+
+      Object.defineProperty(this, "date", {
+         get: function() {
+            return this._date;
+         },
+         set: function(d) {
+            if($.type(d) != "date") {
+               throw new Error("Type error.");
+            }
+
+            if(this.max && this.max < d) {
+               this._date = this.max;
+            }
+            else if(this.min && this.min > d) {
+               this._date = this.m;
+            }
+            else {
+               this._date = d;
+            }
+         }
+      });
+
+      this.id = options.id || "";
+      this.date = options.date || new Date();
+      this.format = options.format || "yyyy-MM-dd HH:mm";
       this.container = options.container || "body";
       this.$element = $(element);
       this.$baseNode = $(baseTmpl).appendTo(this.container);
@@ -463,6 +485,15 @@
 
       updateDatetime();
       setInterval(updateDatetime, 1000);
+
+      this.toggle = function(display) {
+         if(display === true || this.$baseNode.css("display") == "none" && display !== false) {
+            this.$baseNode.show();
+         }
+         else {
+            this.$baseNode.hide();
+         }
+      }
    }
 
    $.fn.datetimepicker = function(options) {
