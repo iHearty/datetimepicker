@@ -7,8 +7,9 @@
       <link rel="stylesheet" href="css/datetimepicker.css">
    </head>
    <body>
-      <input id="datetime" type="text">
-      <div class="datetimepicker">
+      <input class="datetime" type="text">
+      <input class="datetime" type="text">
+      <!-- <div class="datetimepicker">
          <div class="header">
             <div class="time">12:54:30</div>
             <div class="date">2016年3月15日, 星期二</div>
@@ -137,12 +138,13 @@
             </div>
          </div>
          <div class="footer"></div>
-      </div>
+      </div> -->
+      <div class="datetime"></div>
    </body>
    <script type="text/javascript" src="js/lib/jquery-2.1.4.min.js"></script>
    <script type="text/javascript" src="js/datetimepicker.js"></script>
    <script type="text/javascript">
-      $("#datetime").datetimepicker()
+      $(".datetime").datetimepicker()
          .on("datetime", function(evt) {
             console.log(evt);
          });

@@ -98,7 +98,7 @@
 
 (function() {
    var baseTmpl = ''
-      + '<div class="datetimepicker">'
+      + '<div class="datetimepicker" tabindex="0" style="display: none;">'
       +    '<div class="header">'
       +       '<div class="time">12:54:30</div>'
       +       '<div class="date">2016年3月15日, 星期二</div>'
@@ -204,6 +204,14 @@
                   evt.datetime = new Date(dd.getTime());
                   evt.datetimeText = dd.format(_this.format);
                   _this.$element.trigger(evt);
+                  _this.date = evt.datetime;
+
+                  if(_this.autoClose) {
+                     _this.toggle(false);
+                  }
+
+                  _this.$mHolder.find("tbody td").removeClass("selected");
+                  $this.addClass("selected");
                });
          }
 
@@ -271,6 +279,11 @@
                      evt.datetime = new Date(dd.getTime());
                      evt.datetimeText = dd.format(_this.format);
                      _this.$element.trigger(evt);
+                     _this.date = evt.datetime;
+
+                     if(_this.autoClose) {
+                        _this.toggle(false);
+                     }
                   }
 
                   // if($this.hasClass("tobefore") || $this.hasClass("toafter")) {
@@ -332,6 +345,11 @@
                      evt.datetime = new Date(dd.getTime());
                      evt.datetimeText = dd.format(_this.format);
                      _this.$element.trigger(evt);
+                     _this.date = evt.datetime;
+
+                     if(_this.autoClose) {
+                        _this.toggle(false);
+                     }
                   }
 
                   // if($this.hasClass("tobefore") || $this.hasClass("toafter")) {
@@ -418,6 +436,33 @@
          var dd = new Date();
          dd.setHours(0, 0, 0, 0);
          handleView.apply(_this, [dd, idx - nidx]);
+
+         if(_this.autoClose) {
+            var evt = $.Event("datetime");
+            evt.datetime = new Date(dd.getTime());
+            evt.datetimeText = dd.format(_this.format);
+            _this.$element.trigger(evt);
+            _this.date = evt.datetime;
+            _this.toggle(false);
+         }
+      });
+
+      this.$element.on("focus", function() {
+         _this.toggle(true);
+      });
+
+      // this.$element.on("blur", function() {
+      //    _this.toggle(false);
+      // });
+
+      $(document).on("click", function(evt) {
+         if($(evt.target).closest(_this.$element).length) {
+            return;
+         }
+
+         if($(evt.target).closest('.datetimepicker').length === 0) {
+            _this.toggle(false);
+         }
       });
    }
 
@@ -452,7 +497,9 @@
       this.date = options.date || new Date();
       this.format = options.format || "yyyy-MM-dd HH:mm";
       this.container = options.container || "body";
+      this.autoClose = options.autoClose || true;
       this.$element = $(element);
+      this.keepDisplay = this.$element.is("div");
       this.$baseNode = $(baseTmpl).appendTo(this.container);
       this.$timeDisplay = this.$baseNode.find(".header .time");
       this.$dateDisplay = this.$baseNode.find(".header .date");
@@ -486,12 +533,26 @@
       updateDatetime();
       setInterval(updateDatetime, 1000);
 
+      this.isVisible = false;
       this.toggle = function(display) {
          if(display === true || this.$baseNode.css("display") == "none" && display !== false) {
-            this.$baseNode.show();
+            if(this.isVisible) {
+               return;
+            }
+
+            this.$baseNode.fadeIn(300, function() {
+               // $(this).focus();
+            });
+
+            this.isVisible = true;
          }
          else {
-            this.$baseNode.hide();
+            if(this.keepDisplay) {
+               return;
+            }
+
+            this.$baseNode.fadeOut(100);
+            this.isVisible = false;
          }
       }
    }
@@ -502,7 +563,12 @@
          var datetimepicker = $this.data("datetimepicker");
 
          if(!datetimepicker) {
-            $this.data("datetimepicker", new Datetimepicker(this, $.extend({}, options)));
+            datetimepicker = new Datetimepicker(this, $.extend({}, options));
+            $this.data("datetimepicker", datetimepicker);
+         }
+
+         if(datetimepicker.keepDisplay) {
+            datetimepicker.toggle(true);
          }
       });
 
