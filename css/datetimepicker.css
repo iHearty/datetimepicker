@@ -14,69 +14,69 @@
    outline: none;
 }
 
-.datetimepicker .header {
+.datetimepicker .dtp-header {
    width: 100%;
-   height: 25%;
-   padding: 20px;
+   height: 23%;
+   padding: 5.5556%;
    padding-bottom: 0;
    box-sizing: border-box;
 }
 
-.datetimepicker .header .time {
+.datetimepicker .dtp-header .dtp-time {
    font-size: 3em;
    font-family: "等线 Light";
-   padding: 0 4px;
+   padding: 0 0.1em;
 }
 
-.datetimepicker .header .date {
-   padding: 5px 4px;
+.datetimepicker .dtp-header .dtp-date {
+   padding: 0.3em;
    color: #00b294;
 }
 
-.datetimepicker .body {
+.datetimepicker .dtp-body {
    width: 100%;
-   height: 65%;
-   padding: 0 20px;
+   height: 67%;
+   padding: 0 5.5556%;
    box-sizing: border-box;
    position: relative;
 }
 
-.datetimepicker .body .handler-container {
+.datetimepicker .dtp-body .dtp-handler-container {
    width: 100%;
-   height: 40px;
-   line-height: 40px;
+   height: 11.765%;
+   line-height: 2;
 }
 
-.datetimepicker .body .handler-container .date {
+.datetimepicker .dtp-body .dtp-handler-container .dtp-date {
    display: inline-block;
    padding: 0 4px;
    width: 50%;
 }
 
-.datetimepicker .body .handler-container .date:hover {
+.datetimepicker .dtp-body .dtp-handler-container .dtp-date:hover {
    cursor: pointer;
    opacity: 0.7;
 }
 
-.datetimepicker .body .handler-container .handler {
+.datetimepicker .dtp-body .dtp-handler-container .dtp-handler {
    float: right;
    position: relative;
    right: -5px;
 }
 
-.datetimepicker .body .handler-container .handler span {
+.datetimepicker .dtp-body .dtp-handler-container .dtp-handler span {
    width: 40px;
    height: 100%;
    display: inline-block;
    text-align: center;
 }
 
-.datetimepicker .body .handler-container .handler span:hover {
+.datetimepicker .dtp-body .dtp-handler-container .dtp-handler span:hover {
    opacity: 0.7;
    cursor: pointer;
 }
 
-.datetimepicker .body .datetime-container {
+.datetimepicker .dtp-body .dtp-datetime-container {
    position: absolute;
    top: 40px;
    left: 0;
@@ -84,35 +84,39 @@
    bottom: 0;
 }
 
-.datetimepicker .body .datetime-container table {
+.datetimepicker .dtp-body .dtp-datetime-container table {
    width: 100%;
    height: 100%;
    text-align: center;
    padding: 0 10px;
 }
 
-.datetimepicker .body .datetime-container table tr {
-   height: 40px;
+.datetimepicker .dtp-body .dtp-datetime-container table td {
+   height: 25%;
 }
 
-.datetimepicker .body .datetime-container table tbody td {
+.datetimepicker .dtp-body .dtp-datetime-container table.mon td {
+   height: 14.2857%;
+}
+
+.datetimepicker .dtp-body .dtp-datetime-container table tbody td {
    border: 2px solid transparent;
 }
 
-.datetimepicker .body .datetime-container table tbody td.selected {
+.datetimepicker .dtp-body .dtp-datetime-container table tbody td.selected {
    background-color: #00b294;
 }
 
-.datetimepicker .body .datetime-container table tbody td:hover {
+.datetimepicker .dtp-body .dtp-datetime-container table tbody td:hover {
    border: 2px solid #818181;
    cursor: pointer;
 }
 
-.datetimepicker .body .datetime-container table tbody td.disabled {
+.datetimepicker .dtp-body .dtp-datetime-container table tbody td.disabled {
    position: relative;
 }
 
-.datetimepicker .body .datetime-container table tbody td.disabled:after {
+.datetimepicker .dtp-body .dtp-datetime-container table tbody td.disabled:after {
    content: " ";
    width: 40%;
    height: 1px;
@@ -123,23 +127,23 @@
    -webkit-transform: translate(-50%, -50%) rotate(45deg);
 }
 
-.datetimepicker .body .datetime-container table.year td, .datetimepicker .body .datetime-container table.decade td {
+.datetimepicker .dtp-body .dtp-datetime-container table.year td, .dtp-datetimepicker .dtp-body .dtp-datetime-container table.decade td {
    width: 25%;
 }
 
-.datetimepicker .body .datetime-container .tobefore, .datetimepicker .body .datetime-container .toafter {
+.datetimepicker .dtp-body .dtp-datetime-container .tobefore, .dtp-datetimepicker .dtp-body .dtp-datetime-container .toafter {
    color: #999999;
 }
 
-.datetimepicker .footer {
+.datetimepicker .dtp-footer {
    width: 100%;
    height: 10%;
-   padding: 0 20px;
+   padding: 0 5.5556%;
    box-sizing: border-box;
    text-align: right;
 }
 
-.datetimepicker .footer span {
+.datetimepicker .dtp-footer span {
    display: inline-block;
    height: 100%;
    line-height: 2;
@@ -148,6 +152,6 @@
    color: #00b294;
 }
 
-.datetimepicker .footer span:hover {
+.datetimepicker .dtp-footer span:hover {
    opacity: 0.7;
 }

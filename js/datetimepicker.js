@@ -99,26 +99,26 @@
 (function() {
    var baseTmpl = ''
       + '<div class="datetimepicker" tabindex="0" style="display: none;">'
-      +    '<div class="header">'
-      +       '<div class="time">12:54:30</div>'
-      +       '<div class="date">2016年3月15日, 星期二</div>'
+      +    '<div class="dtp-header">'
+      +       '<div class="dtp-time">12:54:30</div>'
+      +       '<div class="dtp-date">2016年3月15日, 星期二</div>'
       +    '</div>'
-      +    '<div class="body">'
-      +       '<div class="handler-container">'
-      +           '<span class="date">2016年3月</span>'
-      +           '<div class="handler">'
-      +              '<span class="up-handler">上</span>'
-      +              '<span class="down-handler">下</span>'
+      +    '<div class="dtp-body">'
+      +       '<div class="dtp-handler-container">'
+      +           '<span class="dtp-date">2016年3月</span>'
+      +           '<div class="dtp-handler">'
+      +              '<span class="dtp-up-handler">上</span>'
+      +              '<span class="dtp-down-handler">下</span>'
       +           '</div>'
       +       '</div>'
-      +       '<div class="datetime-container"></div>'
+      +       '<div class="dtp-datetime-container"></div>'
       +    '</div>'
-      +    '<div class="footer">'
+      +    '<div class="dtp-footer">'
       +       '<span>返回今天</span>'
       +    '</div>'
       + '</div>';
 
-   var monTmpl = '<table cellpadding="0" cellspacing="0" style="display: none">'
+   var monTmpl = '<table cellpadding="0" cellspacing="0" class="mon" style="display: none">'
       +    '<thead>'
       +       '<tr><td>一</td><td>二</td><td>三</td><td>四</td><td>五</td><td>六</td><td>日</td></tr>'
       +    '</thead>'
@@ -196,7 +196,7 @@
 
                   var dd = $this.data("date");
 
-                  // if($this.hasClass("tobefore") || $this.hasClass("toafter")) {
+                  // if($this.hasClass("dtp-tobefore") || $this.hasClass("dtp-toafter")) {
                   //    toDatetime.apply(_this, [dd]);
                   // }
 
@@ -231,17 +231,17 @@
             var dd = new Date(date.getTime());
             $td.data("date", dd)
                .html(date.getDate())
-               .removeClass("tobefore toafter disabled selected");;
+               .removeClass("dtp-tobefore dtp-toafter disabled selected");;
 
             if(_this.date.format("yyyy-MM-dd") == date.format("yyyy-MM-dd")) {
                $td.addClass("selected");
             }
 
             if(idx < offset) {
-               $td.addClass("tobefore");
+               $td.addClass("dtp-tobefore");
             }
             else if(idx > offset + days - 1) {
-               $td.addClass("toafter");
+               $td.addClass("dtp-toafter");
             }
 
             if(_this.max && dd > _this.max) {
@@ -286,7 +286,7 @@
                      }
                   }
 
-                  // if($this.hasClass("tobefore") || $this.hasClass("toafter")) {
+                  // if($this.hasClass("dtp-tobefore") || $this.hasClass("dtp-toafter")) {
                   //    toDatetime.apply(_this, [dd]);
                   // }
                });
@@ -299,17 +299,17 @@
             var dd = new Date(date.getTime());
             $td.data("date", dd)
                .html(date.getMonth() + 1 + "月")
-               .removeClass("tobefore toafter disabled selected");
+               .removeClass("dtp-tobefore dtp-toafter disabled selected");
 
             if(_this.date.format("yyyy-MM") == date.format("yyyy-MM")) {
                $td.addClass("selected");
             }
 
             if(idx < 2) {
-               $td.addClass("tobefore");
+               $td.addClass("dtp-tobefore");
             }
             else if(idx > 13) {
-               $td.addClass("toafter");
+               $td.addClass("dtp-toafter");
             }
 
             if(_this.max && dd > _this.max) {
@@ -352,7 +352,7 @@
                      }
                   }
 
-                  // if($this.hasClass("tobefore") || $this.hasClass("toafter")) {
+                  // if($this.hasClass("dtp-tobefore") || $this.hasClass("dtp-toafter")) {
                   //    toDatetime.apply(_this, [dd]);
                   // }
                });;
@@ -365,17 +365,17 @@
             var dd = new Date(date.getTime());
             $td.data("date", dd)
                .html(date.getFullYear())
-               .removeClass("tobefore toafter disabled selected");
+               .removeClass("dtp-tobefore dtp-toafter disabled selected");
 
             if(_this.date.getFullYear() == date.getFullYear()) {
                $td.addClass("selected");
             }
 
             if(idx < 2) {
-               $td.addClass("tobefore");
+               $td.addClass("dtp-tobefore");
             }
             else if(idx > 11) {
-               $td.addClass("toafter");
+               $td.addClass("dtp-toafter");
             }
 
             if(_this.max && dd > _this.max) {
@@ -501,13 +501,13 @@
       this.$element = $(element);
       this.keepDisplay = this.$element.is("div");
       this.$baseNode = $(baseTmpl).appendTo(this.container);
-      this.$timeDisplay = this.$baseNode.find(".header .time");
-      this.$dateDisplay = this.$baseNode.find(".header .date");
-      this.$handleDatetimeDisplay = this.$baseNode.find(".body .handler-container .date");
-      this.$upHandler = this.$baseNode.find(".body .handler-container .handler .up-handler");
-      this.$downHandler = this.$baseNode.find(".body .handler-container .handler .down-handler");
-      this.$datetimeContainer = this.$baseNode.find(".body .datetime-container");
-      this.$toToday = this.$baseNode.find(".footer span");
+      this.$timeDisplay = this.$baseNode.find(".dtp-header .dtp-time");
+      this.$dateDisplay = this.$baseNode.find(".dtp-header .dtp-date");
+      this.$handleDatetimeDisplay = this.$baseNode.find(".dtp-body .dtp-handler-container .dtp-date");
+      this.$upHandler = this.$baseNode.find(".dtp-body .dtp-handler-container .dtp-handler .dtp-up-handler");
+      this.$downHandler = this.$baseNode.find(".dtp-body .dtp-handler-container .dtp-handler .dtp-down-handler");
+      this.$datetimeContainer = this.$baseNode.find(".dtp-body .dtp-datetime-container");
+      this.$toToday = this.$baseNode.find(".dtp-footer span");
       this.init = {
          mode: this.mode
       };
