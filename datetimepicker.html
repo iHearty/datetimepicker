@@ -31,24 +31,20 @@
    <body>
       <header>Datetimepicker示例</header>
       <div class="input-wrapper">
-         <input class="datetime" type="text" placeholder="我要和上边的不同">
+         <input class="datetime" type="text" placeholder="请选择时间日期">
       </div>
    </body>
    <script type="text/javascript" src="js/lib/jquery-2.1.4.min.js"></script>
    <script type="text/javascript" src="js/datetimepicker.js"></script>
    <script type="text/javascript">
       $(".datetime").datetimepicker({
-            date: new Date('2016/05/30 12:00:00'),
             useTime: true,
             dtpView: 1,
-            min: new Date('2016/03/01 00:00:00'),
-            max: new Date('2016/11/01 00:00:00'),
-            autoClose: false
+            min: new Date('2016/07/01 00:00:00'),
+            max: new Date('2016/11/01 00:00:00')
       }).on("datetime", function(evt) {
             $(this).val(evt.datetime);
             console.log($(this).data('datetimepicker'));
-            $(this).data('datetimepicker').min = evt.datetime;
-            $(this).data('datetimepicker').dtpViewRender(true);
          });
    </script>
 </html>
