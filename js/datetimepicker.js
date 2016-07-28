@@ -1,15 +1,16 @@
-(function() {
-   var format = function(fmt) {
+(function($) {
+   var format = function(date, fmt) {
       var o = {
-         "M+": this.getMonth() + 1, //月份
-         "d+": this.getDate(), //日
-         "h+": this.getHours() % 12 == 0 ? 12 : this.getHours() % 12, //小时
-         "H+": this.getHours(), //小时
-         "m+": this.getMinutes(), //分
-         "s+": this.getSeconds(), //秒
-         "q+": Math.floor((this.getMonth() + 3) / 3), //季度
-         "S": this.getMilliseconds() //毫秒
+         "M+": date.getMonth() + 1, //月份
+         "d+": date.getDate(), //日
+         "h+": date.getHours() % 12 == 0 ? 12 : date.getHours() % 12, //小时
+         "H+": date.getHours(), //小时
+         "m+": date.getMinutes(), //分
+         "s+": date.getSeconds(), //秒
+         "q+": Math.floor((date.getMonth() + 3) / 3), //季度
+         "S": date.getMilliseconds() //毫秒
       };
+
       var week = {
          "0": "\u65e5",
          "1": "\u4e00",
@@ -21,11 +22,11 @@
       };
 
       if(/(y+)/.test(fmt)) {
-         fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+         fmt = fmt.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length));
       }
 
       if(/(E+)/.test(fmt)) {
-         fmt = fmt.replace(RegExp.$1, ((RegExp.$1.length > 1) ? (RegExp.$1.length > 2 ? "\u661f\u671f" : "\u5468") : "") + week[this.getDay() + ""]);
+         fmt = fmt.replace(RegExp.$1, ((RegExp.$1.length > 1) ? (RegExp.$1.length > 2 ? "\u661f\u671f" : "\u5468") : "") + week[date.getDay() + ""]);
       }
 
       for(var k in o) {
@@ -37,7 +38,7 @@
       return fmt;
    };
 
-   var isLeapYear = function() {
+   var isLeapYear = function(date) {
       // summary:
       //    Determines if the year of the date is a leap year
       // description:
@@ -47,60 +48,27 @@
       //    also a multiple of 400. For example, 1900 was not a leap year, but
       //    2000 is one.
 
-      var year = this.getFullYear();
+      var year = date.getFullYear();
       return !(year % 400) || (!(year % 4) && !!(year % 100)); // Boolean
    };
 
-   var getMonthDays = function() {
+   var getMonthDays = function(date) {
       // summary:
       //    返回当前日期当月的天数
-      var month = this.getMonth();
+      var month = date.getMonth();
       var days = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
-      if(month == 1 && this.isLeapYear()) {
+      if(month == 1 && isLeapYear(date)) {
          return 29;
       }
 
       return days[month];
    };
 
-   var add = function(field, amount) {
-      switch(field) {
-         case "y":
-            this.setFullYear(this.getFullYear() + amount);
-            break;
-         case "m":
-            this.setMonth(this.getMonth() + amount);
-            break;
-         case "d":
-            this.setDate(this.getDate() + amount);
-            break;
-         case "h":
-            this.setHours(this.getHours() + amount);
-            break;
-         case "mi":
-            this.setMinutes(this.getMinutes() + amount);
-            break;
-         case "s":
-            this.setSeconds(this.getSeconds() + amount);
-            break;
-         case "ms":
-            this.setMilliseconds(this.getMilliseconds() + amount);
-            break;
-      }
-   }
-
-   Date.prototype.format = format;
-   Date.prototype.isLeapYear = isLeapYear;
-   Date.prototype.getMonthDays = getMonthDays;
-   Date.prototype.add = add;
-})();
-
-(function() {
    var baseTmpl = ''
-      + '<div class="datetimepicker" tabindex="0" style="display: none;">'
+      + '<div class="datetimepicker" tabindex="1" onselectstart="return false;" style="display: none;">'
       +    '<div class="dtp-header">'
-      +       '<div class="dtp-time">12:54:30</div>'
+      +       '<div class="dtp-time" style="display: none;"><span class="dtp-hour">12</span>:<span class="dtp-min">54</span>:<span class="dtp-sec">30</span></div>'
       +       '<div class="dtp-date">2016年3月15日, 星期二</div>'
       +    '</div>'
       +    '<div class="dtp-body">'
@@ -114,307 +82,287 @@
       +       '<div class="dtp-datetime-container"></div>'
       +    '</div>'
       +    '<div class="dtp-footer">'
-      +       '<span>返回今天</span>'
       +    '</div>'
       + '</div>';
 
-   var monTmpl = '<table cellpadding="0" cellspacing="0" class="mon" style="display: none">'
-      +    '<thead>'
-      +       '<tr><td>一</td><td>二</td><td>三</td><td>四</td><td>五</td><td>六</td><td>日</td></tr>'
-      +    '</thead>'
-      +    '<tbody>'
-      +       '<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'
-      +       '<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'
-      +       '<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'
-      +       '<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'
-      +       '<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'
-      +       '<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'
-      +    '</tbody>'
+   var mnTmpl = ''
+      + '<div class="table-wrapper" style="display: none">'
+      +    '<table cellpadding="0" cellspacing="0">'
+      +       '<thead>'
+      +          '<tr><td>一</td><td>二</td><td>三</td><td>四</td><td>五</td><td>六</td><td>日</td></tr>'
+      +       '</thead>'
+      +    '</table>'
+      +    '<div class="mn-body">'
+      +       '<table cellpadding="0" cellspacing="0">'
+      +          '<tbody>'
+      +             '<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'
+      +             '<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'
+      +             '<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'
+      +             '<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'
+      +             '<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'
+      +             '<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'
+      +          '</tbody>'
+      +       '</table>'
+      +    '</div>'
+      + '</div>';
+
+   var yeTmpl = ''
+      + '<table class="year" style="display: none">'
+      +    '<tr><td></td><td></td><td></td><td></td></tr>'
+      +    '<tr><td></td><td></td><td></td><td></td></tr>'
+      +    '<tr><td></td><td></td><td></td><td></td></tr>'
+      +    '<tr><td></td><td></td><td></td><td></td></tr>'
       + '</table>';
 
-   var yearTmpl = '<table class="year" style="display: none">'
+   var deTmpl = ''
+      + '<table class="decade" style="display: none">'
       +    '<tr><td></td><td></td><td></td><td></td></tr>'
       +    '<tr><td></td><td></td><td></td><td></td></tr>'
       +    '<tr><td></td><td></td><td></td><td></td></tr>'
       +    '<tr><td></td><td></td><td></td><td></td></tr>'
       + '</table>';
 
-   var decadeTmpl = '<table class="decade" style="display: none">'
-      +    '<tr><td></td><td></td><td></td><td></td></tr>'
-      +    '<tr><td></td><td></td><td></td><td></td></tr>'
-      +    '<tr><td></td><td></td><td></td><td></td></tr>'
-      +    '<tr><td></td><td></td><td></td><td></td></tr>'
-      + '</table>';
+   var mnView = 1;
+   var yeView = 2;
+   var deView = 3;
 
-   var weekConvertor = {0: 7, 1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6};
-   var modes = ["decade", "year", "month"];
-   var holders = ["$dHolder", "$yHolder", "$mHolder"];
+   var dtClear = function() {
+      if(this.initialize.dtpView == mnView) {
+         this.dtpViewDate.setHours(0, 0, 0, 0);
 
-   var handleView = function(date, updown) {
-      var _this = this;
-      var idx = modes.indexOf(this.mode + "") + updown;
+         if(this.max) {
+            this.max.setHours(0, 0, 0, 0);
+         }
 
-      if(idx < 0 || idx > modes.length - 1) {
-         return;
+         if(this.min) {
+            this.min.setHours(0, 0, 0, 0);
+         }
       }
+      else if(this.initialize.dtpView == yeView) {
+         this.dtpViewDate.setDate(1);
+         this.dtpViewDate.setHours(0, 0, 0, 0);
 
-      _this.mode = modes[idx];
-      // this[holders[idx - updown]].hide();
-      if(updown < 0) {
-         this[holders[idx - updown]].addClass("animated zoomOut").one("animationend", function() {
-            $(this).hide()
-               .removeClass("animated zoomOut");
-            toDatetime.apply(_this, [date]);
-         });
+         if(this.max) {
+            this.max.setDate(1);
+            this.max.setHours(0, 0, 0, 0);
+         }
+
+         if(this.min) {
+            this.min.setDate(1);
+            this.min.setHours(0, 0, 0, 0);
+         }
       }
-      else {
-         this[holders[idx - updown]].fadeOut(50, function() {
-            toDatetime.apply(_this, [date]);
-         });
+      else if(this.initialize.dtpView == deView) {
+         this.dtpViewDate.setMonth(0);
+         this.dtpViewDate.setDate(1);
+         this.dtpViewDate.setHours(0, 0, 0, 0);
+
+         if(this.max) {
+            this.max.setMonth(0);
+            this.max.setDate(1);
+            this.max.setHours(0, 0, 0, 0);
+         }
+
+         if(this.min) {
+            this.min.setMonth(0);
+            this.min.setDate(1);
+            this.min.setHours(0, 0, 0, 0);
+         }
       }
    }
 
-   var toDatetime = function(date) {
+   var init = function() {
       var _this = this;
-      date = new Date(date.getTime());
+      this.formatRender();
 
-      var updateHandleDisplay = function(date, text) {
-         _this.$handleDatetimeDisplay.data("date", new Date(date.getTime())).html(text);
-      }
+      this.$baseNode.on('blur', function(evt) {
+      });
 
-      if(this.mode == "month") {
-         updateHandleDisplay(date, date.format("yyyy年M月"));
+      if(this.useTime) {
+         this.$timeDisplay.toggle(true);
+         var nd = new Date();
+         this._hour = nd.getHours();
+         this._min = nd.getUTCMinutes();
+         this._sec = nd.getSeconds();
+         this.$hourDisplay.attr('tabindex', 2);
+         this.$minDisplay.attr('tabindex', 2);
+         this.$secDisplay.attr('tabindex', 2);
 
-         if(!this.$mHolder) {
-            this.$mHolder = $(monTmpl).appendTo(this.$datetimeContainer)
-               .delegate("tbody td", "click", function() {
-                  var $this = $(this);
+         this.$hourDisplay.on('keyup mousewheel', function(evt) {
+            var $this = $(this);
 
-                  if($this.hasClass("disabled")) {
-                     return;
-                  }
+            if(evt.type == 'mousewheel' || evt.keyCode == 38 || evt.keyCode == 40) {
+               var offset = 0;
 
-                  var dd = $this.data("date");
+               if(evt.type == 'mousewheel') {
+                  var oe = evt.originalEvent;
+                  offset = oe.wheelDelta > 0 ? 1 : -1;
+               }
+               else {
+                  offset = evt.keyCode == 38 ? 1 : -1;
+               }
 
-                  // if($this.hasClass("dtp-tobefore") || $this.hasClass("dtp-toafter")) {
-                  //    toDatetime.apply(_this, [dd]);
-                  // }
+               var hour = (Number($this.html()) + offset);
 
-                  var evt = $.Event("datetime");
-                  evt.datetime = new Date(dd.getTime());
-                  evt.datetimeText = dd.format(_this.format);
-                  _this.$element.trigger(evt);
-                  _this.date = evt.datetime;
+               if(hour < 0) {
+                  hour = 23;
+               }
 
-                  if(_this.autoClose) {
-                     _this.toggle(false);
-                  }
+               if(hour > 23) {
+                  hour = 0;
+               }
 
-                  _this.$mHolder.find("tbody td").removeClass("selected");
-                  $this.addClass("selected");
-               });
-         }
+               if(hour < 10) {
+                  hour = '0' + hour;
+               }
 
-         date.setDate(1);
-         var days = date.getMonthDays();
-         var week = weekConvertor[date.getDay()];
-         var offset = week - 1;
-
-         if(offset == 0) {
-            offset += 7;
-         }
-
-         date.setDate(date.getDate() - offset);
-
-         $.each(this.$mHolder.find("tbody td"), function(idx, td) {
-            var $td = $(td);
-            var dd = new Date(date.getTime());
-            $td.data("date", dd)
-               .html(date.getDate())
-               .removeClass("dtp-tobefore dtp-toafter disabled selected");;
-
-            if(_this.date.format("yyyy-MM-dd") == date.format("yyyy-MM-dd")) {
-               $td.addClass("selected");
+               _this._hour = hour;
+               $this.html(hour);
             }
-
-            if(idx < offset) {
-               $td.addClass("dtp-tobefore");
+            else if(evt.keyCode == 37) {
+               _this.$secDisplay.focus();
             }
-            else if(idx > offset + days - 1) {
-               $td.addClass("dtp-toafter");
+            else if(evt.keyCode == 39) {
+               _this.$minDisplay.focus();
             }
-
-            if(_this.max && dd > _this.max) {
-               $td.addClass("disabled");
-            }
-
-            if(_this.min && dd < _this.min) {
-               $td.addClass("disabled");
-            }
-
-            date.add("d", 1);
          });
 
-         this.$mHolder.fadeIn(100);
-      }
-      else if(this.mode == "year") {
-         updateHandleDisplay(date, date.format("yyyy年"));
+         this.$minDisplay.on('keyup mousewheel', function(evt) {
+            var $this = $(this);
 
-         if(!this.$yHolder) {
-            this.$yHolder = $(yearTmpl).appendTo(this.$datetimeContainer)
-               .delegate("td", "click", function() {
-                  var $this = $(this);
-                  var dd = $this.data("date");
+            if(evt.type == 'mousewheel' || evt.keyCode == 38 || evt.keyCode == 40) {
+               var offset = 0;
 
-                  if(_this.init.mode != _this.mode) {
-                     // toDatetime.apply(_this, [dd]);
-                     handleView.apply(_this, [dd, 1]);
-                  }
-                  else {
-                     if($this.hasClass("disabled")) {
-                        return;
-                     }
+               if(evt.type == 'mousewheel') {
+                  var oe = evt.originalEvent;
+                  offset = oe.wheelDelta > 0 ? 1 : -1;
+               }
+               else {
+                  offset = evt.keyCode == 38 ? 1 : -1;
+               }
 
-                     var evt = $.Event("datetime");
-                     evt.datetime = new Date(dd.getTime());
-                     evt.datetimeText = dd.format(_this.format);
-                     _this.$element.trigger(evt);
-                     _this.date = evt.datetime;
+               var min = (Number($this.html()) + offset);
 
-                     if(_this.autoClose) {
-                        _this.toggle(false);
-                     }
-                  }
+               if(min < 0) {
+                  min = 59;
+               }
 
-                  // if($this.hasClass("dtp-tobefore") || $this.hasClass("dtp-toafter")) {
-                  //    toDatetime.apply(_this, [dd]);
-                  // }
-               });
-         }
+               if(min > 59) {
+                  min = 0;
+               }
 
-         date.setMonth(-2);
+               if(min < 10) {
+                  min = '0' + min;
+               }
 
-         $.each(this.$yHolder.find("td"), function(idx, td) {
-            var $td = $(td);
-            var dd = new Date(date.getTime());
-            $td.data("date", dd)
-               .html(date.getMonth() + 1 + "月")
-               .removeClass("dtp-tobefore dtp-toafter disabled selected");
-
-            if(_this.date.format("yyyy-MM") == date.format("yyyy-MM")) {
-               $td.addClass("selected");
+               _this._min = min;
+               $this.html(min);
             }
-
-            if(idx < 2) {
-               $td.addClass("dtp-tobefore");
+            else if(evt.keyCode == 37) {
+               _this.$hourDisplay.focus();
             }
-            else if(idx > 13) {
-               $td.addClass("dtp-toafter");
+            else if(evt.keyCode == 39) {
+               _this.$secDisplay.focus();
             }
-
-            if(_this.max && dd > _this.max) {
-               $td.addClass("disabled");
-            }
-
-            if(_this.min && dd < _this.min) {
-               $td.addClass("disabled");
-            }
-
-            date.add("m", 1);
          });
 
-         this.$yHolder.fadeIn(100);
-      }
-      else if(this.mode == "decade") {
-         var dd = new Date(date.getTime());
-         dd.setFullYear(dd.getFullYear() + (10 - 1));
-         updateHandleDisplay(date, date.format("yyyy年") + " - " + dd.format("yyyy年"));
+         this.$secDisplay.on('keyup mousewheel', function(evt) {
+            var $this = $(this);
 
-         if(!this.$dHolder) {
-            this.$dHolder = $(decadeTmpl).appendTo(this.$datetimeContainer)
-               .delegate("td", "click", function() {
-                  var $this = $(this);
-                  var dd = $this.data("date");
+            if(evt.type == 'mousewheel' || evt.keyCode == 38 || evt.keyCode == 40) {
+               var offset = 0;
 
-                  if(_this.init.mode != _this.mode) {
-                     // toDatetime.apply(_this, [dd]);
-                     handleView.apply(_this, [dd, 1]);
-                  }
-                  else {
-                     var evt = $.Event("datetime");
-                     evt.datetime = new Date(dd.getTime());
-                     evt.datetimeText = dd.format(_this.format);
-                     _this.$element.trigger(evt);
-                     _this.date = evt.datetime;
+               if(evt.type == 'mousewheel') {
+                  var oe = evt.originalEvent;
+                  offset = oe.wheelDelta > 0 ? 1 : -1;
+               }
+               else {
+                  offset = evt.keyCode == 38 ? 1 : -1;
+               }
 
-                     if(_this.autoClose) {
-                        _this.toggle(false);
-                     }
-                  }
+               var sec = (Number($this.html()) + offset);
 
-                  // if($this.hasClass("dtp-tobefore") || $this.hasClass("dtp-toafter")) {
-                  //    toDatetime.apply(_this, [dd]);
-                  // }
-               });;
-         }
+               if(sec < 0) {
+                  sec = 59;
+               }
 
-         date.setFullYear(date.getFullYear() - 2);
+               if(sec > 59) {
+                  sec = 0;
+               }
 
-         $.each(this.$dHolder.find("td"), function(idx, td) {
-            var $td = $(td);
-            var dd = new Date(date.getTime());
-            $td.data("date", dd)
-               .html(date.getFullYear())
-               .removeClass("dtp-tobefore dtp-toafter disabled selected");
+               if(sec < 10) {
+                  sec = '0' + sec;
+               }
 
-            if(_this.date.getFullYear() == date.getFullYear()) {
-               $td.addClass("selected");
+               _this._sec = sec;
+               $this.html(sec);
             }
-
-            if(idx < 2) {
-               $td.addClass("dtp-tobefore");
+            else if(evt.keyCode == 37) {
+               _this.$minDisplay.focus();
             }
-            else if(idx > 11) {
-               $td.addClass("dtp-toafter");
+            else if(evt.keyCode == 39) {
+               _this.$hourDisplay.focus();
             }
-
-            if(_this.max && dd > _this.max) {
-               $td.addClass("disabled");
-            }
-
-            if(_this.min && dd < _this.min) {
-               $td.addClass("disabled");
-            }
-
-            date.add("y", 1);
          });
-
-         this.$dHolder.fadeIn(100);
       }
-   }
 
-   var initHandle = function() {
-      var _this = this;
 
-      var updownHandler = function(updown) {
-         var date = _this.$handleDatetimeDisplay.data("date");
-         var animate = updown < 0 ? "slideOutDown" : "slideOutUp";
-
-         if(_this.mode == "month") {
-            date.setMonth(date.getMonth() + updown);
+      this.$dateDisplay.on('click', function() {
+         if(_this.dtpView == yeView) {
+            _this.$yeView.hide();
          }
-         else if(_this.mode == "year") {
-            date.setFullYear(date.getFullYear() + updown);
-         }
-         else if(_this.mode == "decade") {
-            date.setFullYear(date.getFullYear() + updown * 10);
+         else if(_this.dtpView == deView) {
+            _this.$deView.hide();
          }
 
-         var idx = modes.indexOf(_this.mode);
-         var $holder = holders[idx];
+         _this.dtpView = _this.initialize.dtpView;
+         _this.dtpViewDate = new Date();
+         _this.dtClear();
+         _this.formatRender();
+         _this.dtpViewRender();
+      });
 
-         _this[$holder].fadeOut(50, function() {
-            toDatetime.apply(_this, [date]);
+      this.$handleDatetimeDisplay.on("click", function() {
+         var $handleView = null;
+
+         if(_this.dtpView == mnView) {
+            _this.dtpView = yeView;
+            $handleView = _this.$mnView;
+         }
+         else if(_this.dtpView == yeView) {
+            _this.dtpView = deView;
+            $handleView = _this.$yeView;
+         }
+
+         _this.formatRender();
+
+         if($handleView) {
+            $handleView.addClass("animated zoomOut").one("animationend", function() {
+               $(this).hide().removeClass("animated zoomOut");
+               _this.dtpViewRender();
+            });
+         }
+      });
+
+      var updownHandler = function(dir) {
+         var $handler = null;
+
+         if(_this.dtpView == mnView) {
+            _this.dtpViewDate.setMonth(_this.dtpViewDate.getMonth() + dir);
+            $handler = _this.$mnView.find('.mn-body');
+         }
+         else if(_this.dtpView == yeView) {
+            _this.dtpViewDate.setFullYear(_this.dtpViewDate.getFullYear() + dir);
+            $handler = _this.$yeView;
+         }
+         else if(_this.dtpView == deView) {
+            _this.dtpViewDate.setFullYear(_this.dtpViewDate.getFullYear() - dir * 10);
+            $handler = _this.$deView;
+         }
+
+         _this.formatRender();
+         $handler.fadeOut(50, function() {
+            _this.dtpViewRender();
          });
       }
 
@@ -426,34 +374,9 @@
          updownHandler(1);
       });
 
-      this.$handleDatetimeDisplay.on("click", function() {
-         handleView.apply(_this, [$(this).data("date"), -1]);
-      });
-
-      this.$toToday.on("click", function() {
-         var idx = modes.indexOf(_this.init.mode);
-         var nidx = modes.indexOf(_this.mode);
-         var dd = new Date();
-         dd.setHours(0, 0, 0, 0);
-         handleView.apply(_this, [dd, idx - nidx]);
-
-         if(_this.autoClose) {
-            var evt = $.Event("datetime");
-            evt.datetime = new Date(dd.getTime());
-            evt.datetimeText = dd.format(_this.format);
-            _this.$element.trigger(evt);
-            _this.date = evt.datetime;
-            _this.toggle(false);
-         }
-      });
-
       this.$element.on("focus", function() {
          _this.toggle(true);
       });
-
-      // this.$element.on("blur", function() {
-      //    _this.toggle(false);
-      // });
 
       $(document).on("click", function(evt) {
          if($(evt.target).closest(_this.$element).length) {
@@ -466,96 +389,264 @@
       });
    }
 
-   var Datetimepicker = function(element, options) {
+   var formatRender = function() {
+      var dt = '';
+
+      if(this.dtpView == mnView) {
+         dt = format(this.dtpViewDate, 'yyyy年M月');
+      }
+      else if(this.dtpView == yeView) {
+         dt = this.dtpViewDate.getFullYear() + '年';
+      }
+      else if(this.dtpView == deView) {
+         var year = this.dtpViewDate.getFullYear();
+            dt = year + '~' + (year + 10 - 1);
+      }
+
+      this.$handleDatetimeDisplay.html(dt);
+   }
+
+   var dtpViewRender = function() {
       var _this = this;
-      this.mode = options.mode || "month";
-      this.max = options.max || new Date('2016-03-20 00:00:00');
-      this.min = options.min || new Date('2016-02-01 00:00:00');
+      console.log(this.dtpView);
 
-      Object.defineProperty(this, "date", {
-         get: function() {
-            return this._date;
-         },
-         set: function(d) {
-            if($.type(d) != "date") {
-               throw new Error("Type error.");
-            }
+      if(this.dtpView == mnView) {
+         if(!this.$mnView) {
+            this.$mnView = $(mnTmpl).appendTo(this.$datetimeContainer)
+               .delegate('tbody td', 'click', function() {
+                  var $this = $(this);
 
-            if(this.max && this.max < d) {
-               this._date = this.max;
-            }
-            else if(this.min && this.min > d) {
-               this._date = this.m;
-            }
-            else {
-               this._date = d;
-            }
+                  if(!$this.hasClass('disabled') && _this.dtpView == _this.initialize.dtpView) {
+                     var evt = $.Event("datetime");
+                     evt.datetime = new Date(Number($this.attr('date')));
+
+                     if(_this.useTime) {
+                        evt.datetime.setHours(Number(_this._hour), Number(_this._min), Number(_this._sec));
+                     }
+
+                     _this.$element.trigger(evt);
+                     _this.date = evt.datetime;
+                     _this.$mnView.find('td.selected').removeClass();
+                     $this.addClass('selected');
+
+                     if(_this.autoClose) {
+                        _this.toggle(false);
+                     }
+                  }
+               });
          }
-      });
 
+         var n = new Date(this.dtpViewDate.getTime());
+         n.setDate(1);
+         var d = n.getDay();
+         var offset = d == 0 ? 6 : d - 1;
+
+         if(offset == 0) {
+            offset = 7;
+         }
+
+         n.setDate(n.getDate() - offset);
+         var days = getMonthDays(this.dtpViewDate);
+         var f = 'yyyy-MM-dd';
+         var formated = format(this.date, f);
+
+         this.$mnView.find('.mn-body').find('tbody td').each(function(idx, td) {
+            var $td = $(td).html(n.getDate())
+               .attr('date', n.getTime())
+               .toggleClass('selected', formated == format(n, f))
+               .toggleClass('dtp-tobefore', idx < offset)
+               .toggleClass('dtp-toafter', idx >= offset + days)
+               .toggleClass('disabled', _this.max && n > _this.max || _this.min && n < _this.min);
+
+            n.setDate(n.getDate() + 1);
+         });
+
+         if(this.$mnView.css('display') == 'none') {
+            this.$mnView.fadeIn(100);
+         }
+         else {
+            this.$mnView.find('.mn-body').fadeIn(100);
+         }
+      }
+      else if(this.dtpView == yeView) {
+         if(!this.$yeView) {
+            var _this = this;
+            this.$yeView = $(yeTmpl).appendTo(this.$datetimeContainer)
+               .delegate('td', 'click', function() {
+                  var $this = $(this);
+                  var month = Number($this.attr('month'));
+
+                  if(_this.dtpView != _this.initialize.dtpView) {
+                     _this.dtpView = mnView;
+                     _this.dtpViewDate.setMonth(month);
+                     _this.$handleDatetimeDisplay.html(format(_this.dtpViewDate, 'yyyy年M月'));
+                     _this.$yeView.addClass("animated zoomIn")
+                        .one("animationend", function() {
+                           $(this).hide().removeClass("animated zoomIn");
+                           _this.dtpViewRender();
+                        });
+                  }
+                  else if(!$this.hasClass('disabled') && _this.dtpView == _this.initialize.dtpView) {
+                     var evt = $.Event("datetime");
+                     evt.datetime = new Date(Number($this.attr('date')));
+                     _this.$element.trigger(evt);
+                     _this.date = evt.datetime;
+                     _this.$yeView.find('td.selected').removeClass();
+                     $this.addClass('selected');
+
+                     if(_this.autoClose) {
+                        _this.toggle(false);
+                     }
+                  }
+               });
+         }
+
+         var n = new Date(this.dtpViewDate.getTime());
+         n.setFullYear(n.getFullYear() - 1);
+         n.setMonth(10);
+         var f = 'yyyy-MM';
+         var formated = format(this.date, f);
+
+         this.$yeView.find('td').each(function(idx, td) {
+            var $td = $(td).html(n.getMonth() + 1 + '月')
+               .attr('date', n.getTime())
+               .attr('month', n.getMonth())
+               .toggleClass('selected', formated == format(n, f))
+               .toggleClass('dtp-tobefore', idx < 2)
+               .toggleClass('dtp-toafter', idx >= 14)
+               .toggleClass('disabled', _this.max && n > _this.max || _this.min && n < _this.min);;
+
+            n.setMonth(n.getMonth() + 1);
+         });
+         this.$yeView.fadeIn(100);
+      }
+      else if(this.dtpView == deView) {
+         if(!this.$deView) {
+            var _this = this;
+            this.$deView = $(yeTmpl).appendTo(this.$datetimeContainer)
+               .delegate('td', 'click', function() {
+                  var $this = $(this);
+                  var year = Number($this.attr('year'));
+
+                  if(_this.dtpView != _this.initialize.dtpView) {
+                     _this.$handleDatetimeDisplay.html(year + '年');
+                     _this.dtpView = yeView;
+                     _this.dtpViewDate.setFullYear(year);
+                     _this.$deView.addClass("animated zoomIn")
+                        .one("animationend", function() {
+                           $(this).hide().removeClass("animated zoomIn");
+                           _this.dtpViewRender();
+                        });
+                  }
+                  else if(!$this.hasClass('disabled') && _this.dtpView == _this.initialize.dtpView) {
+                     var evt = $.Event("datetime");
+                     evt.datetime = new Date(Number($this.attr('date')));
+                     _this.$element.trigger(evt);
+                     _this.date = evt.datetime;
+                     _this.$deView.find('td.selected').removeClass();
+                     $this.addClass('selected');
+
+                     if(_this.autoClose) {
+                        _this.toggle(false);
+                     }
+                  }
+               });
+         }
+
+         var n = new Date(this.dtpViewDate.getTime());
+         n.setFullYear(n.getFullYear() - 4);
+         var year = this.date.getFullYear();
+
+         this.$deView.find('td').each(function(idx, td) {
+            var $td = $(td).html(n.getFullYear())
+               .attr('date', n.getTime())
+               .attr('year', n.getFullYear())
+               .toggleClass('selected', n.getFullYear() == year)
+               .toggleClass('dtp-tobefore', idx < 4)
+               .toggleClass('dtp-toafter', idx >= 14)
+               .toggleClass('disabled', _this.max && n > _this.max || _this.min && n < _this.min);;
+
+            n.setFullYear(n.getFullYear() + 1);
+         });
+         this.$deView.fadeIn(100);
+      }
+   }
+
+   var toggle = function(display) {
+      var _this = this;
+      var isVis = this.$baseNode.css('display') != 'none';
+
+      if(display) {
+         if(isVis) {
+            return;
+         }
+
+         this.$baseNode.fadeIn(300, function() {
+            if(_this.useTime) {
+               _this.$hourDisplay.focus();
+            }
+         });
+      }
+      else {
+         if(!isVis) {
+            return;
+         }
+
+         this.$baseNode.fadeOut(300);
+      }
+   }
+
+   var layout = function(top, left) {
+      var el = this.$element.position();
+      var outerHeight = this.$element.outerHeight();
+
+      this.$baseNode.css({
+         top: (top || el.top) + outerHeight + 3,
+         left: left || el.left
+      });
+   }
+
+   var Datetimepicker = function(element, options) {
       this.id = options.id || "";
       this.date = options.date || new Date();
-      this.format = options.format || "yyyy-MM-dd HH:mm";
+      this.max = options.max || new Date('2016-07-30 00:00:00');
+      this.min = options.min || new Date('2016-07-01 00:00:00');
       this.container = options.container || "body";
       this.autoClose = options.autoClose || true;
+      this.useTime = options.useTime || false;
+      this.dtpView = options.dtpView || 1;
       this.$element = $(element);
       this.keepDisplay = this.$element.is("div");
       this.$baseNode = $(baseTmpl).appendTo(this.container);
       this.$timeDisplay = this.$baseNode.find(".dtp-header .dtp-time");
       this.$dateDisplay = this.$baseNode.find(".dtp-header .dtp-date");
+      this.$hourDisplay = this.$baseNode.find(".dtp-header .dtp-hour");
+      this.$minDisplay = this.$baseNode.find(".dtp-header .dtp-min");
+      this.$secDisplay = this.$baseNode.find(".dtp-header .dtp-sec");
       this.$handleDatetimeDisplay = this.$baseNode.find(".dtp-body .dtp-handler-container .dtp-date");
       this.$upHandler = this.$baseNode.find(".dtp-body .dtp-handler-container .dtp-handler .dtp-up-handler");
       this.$downHandler = this.$baseNode.find(".dtp-body .dtp-handler-container .dtp-handler .dtp-down-handler");
       this.$datetimeContainer = this.$baseNode.find(".dtp-body .dtp-datetime-container");
-      this.$toToday = this.$baseNode.find(".dtp-footer span");
-      this.init = {
-         mode: this.mode
-      };
 
-      this.date.setHours(0, 0, 0, 0);
-
-      if(this.mode == "year") {
-         this.date.setDate(0);
-      }
-      else if(this.mode == "decade") {
-         this.setMonth(0, 0);
+      this.initialize = {
+         date: this.date,
+         dtpView: this.dtpView
       }
 
-      initHandle.apply(this);
-      toDatetime.apply(this, [this.date]);
+      this.dtpViewDate = new Date(this.date.getTime());
+      this.dtClear();
 
-      var updateDatetime = function() {
-         var dd = new Date();
-         _this.$timeDisplay.html(dd.format("HH:mm:ss"));
-         _this.$dateDisplay.html(dd.format("yyyy年M月d日, EEE"));
-      }
-
-      updateDatetime();
-      setInterval(updateDatetime, 1000);
-
-      this.isVisible = false;
-      this.toggle = function(display) {
-         if(display === true || this.$baseNode.css("display") == "none" && display !== false) {
-            if(this.isVisible) {
-               return;
-            }
-
-            this.$baseNode.fadeIn(300, function() {
-               // $(this).focus();
-            });
-
-            this.isVisible = true;
-         }
-         else {
-            if(this.keepDisplay) {
-               return;
-            }
-
-            this.$baseNode.fadeOut(100);
-            this.isVisible = false;
-         }
-      }
+      this.init();
+      this.layout();
+      this.dtpViewRender();
    }
+
+   Datetimepicker.prototype.dtpViewRender = dtpViewRender;
+   Datetimepicker.prototype.init = init;
+   Datetimepicker.prototype.formatRender = formatRender;
+   Datetimepicker.prototype.dtClear = dtClear;
+   Datetimepicker.prototype.toggle = toggle;
+   Datetimepicker.prototype.layout = layout;
 
    $.fn.datetimepicker = function(options) {
       this.each(function() {
@@ -566,12 +657,8 @@
             datetimepicker = new Datetimepicker(this, $.extend({}, options));
             $this.data("datetimepicker", datetimepicker);
          }
-
-         if(datetimepicker.keepDisplay) {
-            datetimepicker.toggle(true);
-         }
       });
 
       return this;
    }
-})();
+})(jQuery);

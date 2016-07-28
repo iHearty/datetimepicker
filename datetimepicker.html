@@ -2,151 +2,48 @@
 <html lang="en">
    <head>
       <meta charset="UTF-8">
-      <title>Document</title>
-      <link rel="stylesheet" href="css/animate.css">
+      <title>Datetimepicker</title>
       <link rel="stylesheet" href="css/datetimepicker.css">
+      <style>
+         html {
+            font-family: 'Microsoft YaHei';
+            background-color: #ECF0F1;
+         }
+
+         body {
+            padding: 20px 30px;
+         }
+
+         header {
+            font-size: 32px;
+         }
+
+         .input-wrapper {
+            margin: 20px;
+         }
+
+         .input-wrapper input {
+            width: 240px;
+            height: 32px;
+            padding: 0 15px;
+         }
+      </style>
    </head>
    <body>
-      <input class="datetime" type="text">
-      <input class="datetime" type="text">
-      <!-- <div class="datetimepicker">
-         <div class="header">
-            <div class="time">12:54:30</div>
-            <div class="date">2016年3月15日, 星期二</div>
-         </div>
-         <div class="body">
-            <div class="handler-container">
-               <span class="date">2016年3月</span>
-               <div class="handler">
-                  <span>上</span>
-                  <span>下</span>
-               </div>
-            </div>
-            <div class="datetime-container">
-               <table cellpadding="0" cellspacing="0" style="display: none;">
-                  <thead>
-                     <tr>
-                        <td>一</td>
-                        <td>二</td>
-                        <td>三</td>
-                        <td>四</td>
-                        <td>五</td>
-                        <td>六</td>
-                        <td>日</td>
-                     </tr>
-                  </thead>
-                  <tbody>
-                     <tr>
-                        <td>29</td>
-                        <td>1</td>
-                        <td>2</td>
-                        <td>3</td>
-                        <td>4</td>
-                        <td>5</td>
-                        <td>6</td>
-                     </tr>
-                     <tr>
-                        <td>7</td>
-                        <td>8</td>
-                        <td>9</td>
-                        <td>10</td>
-                        <td>11</td>
-                        <td>12</td>
-                        <td>13</td>
-                     </tr>
-                     <tr>
-                        <td>14</td>
-                        <td class="selected">15</td>
-                        <td>16</td>
-                        <td>17</td>
-                        <td>18</td>
-                        <td>19</td>
-                        <td>20</td>
-                     </tr>
-                     <tr>
-                        <td>21</td>
-                        <td>22</td>
-                        <td>23</td>
-                        <td>24</td>
-                        <td>25</td>
-                        <td>26</td>
-                        <td>27</td>
-                     </tr>
-                     <tr>
-                        <td>28</td>
-                        <td>29</td>
-                        <td>30</td>
-                        <td>31</td>
-                        <td>1</td>
-                        <td>2</td>
-                        <td>3</td>
-                     </tr>
-                  </tbody>
-               </table>
-               <table class="year" style="display: none;">
-                  <tr>
-                     <td>11月</td>
-                     <td>12月</td>
-                     <td>1月</td>
-                     <td>2月</td>
-                  </tr>
-                  <tr>
-                     <td>3月</td>
-                     <td>4月</td>
-                     <td>5月</td>
-                     <td>6月</td>
-                  </tr>
-                  <tr>
-                     <td>7月</td>
-                     <td>8月</td>
-                     <td>9月</td>
-                     <td>10月</td>
-                  </tr>
-                  <tr>
-                     <td>11月</td>
-                     <td>12月</td>
-                     <td>1月</td>
-                     <td>2月</td>
-                  </tr>
-               </table>
-               <table cellpadding="0" cellspacing="0" class="decade">
-                  <tr>
-                     <td>2013</td>
-                     <td>2014</td>
-                     <td>2015</td>
-                     <td class="selected">2016</td>
-                  </tr>
-                  <tr>
-                     <td>2017</td>
-                     <td>2018</td>
-                     <td>2019</td>
-                     <td>2020</td>
-                  </tr>
-                  <tr>
-                     <td>2021</td>
-                     <td>2022</td>
-                     <td>2023</td>
-                     <td>2024</td>
-                  </tr>
-                  <tr>
-                     <td>2025</td>
-                     <td>2026</td>
-                     <td>2027</td>
-                     <td>2028</td>
-                  </tr>
-               </table>
-            </div>
-         </div>
-         <div class="footer"></div>
-      </div> -->
-      <div class="datetime"></div>
+      <header>Datetimepicker示例</header>
+      <div class="input-wrapper">
+         <input class="datetime" type="text" placeholder="我要和上边的不同">
+      </div>
    </body>
    <script type="text/javascript" src="js/lib/jquery-2.1.4.min.js"></script>
    <script type="text/javascript" src="js/datetimepicker.js"></script>
    <script type="text/javascript">
-      $(".datetime").datetimepicker()
+      $(".datetime").datetimepicker({useTime: false, dtpView: 2})
          .on("datetime", function(evt) {
-            console.log(evt);
+            $(this).val(evt.datetime);
+            console.log($(this).data('datetimepicker'));
+            $(this).data('datetimepicker').min = evt.datetime;
+            $(this).data('datetimepicker').dtpViewRender();
          });
    </script>
 </html>
