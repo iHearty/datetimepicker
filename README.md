@@ -3,6 +3,11 @@
 Github地址： https://github.com/iHearty/datetimepicker
 具体介绍如下：
 
+######演示动画
+<br />
+
+![datetimepicker.gif](http://upload-images.jianshu.io/upload_images/2597444-c935ebcc5e835eb2.gif?imageMogr2/auto-orient/strip)
+
 ######支持三种视图模式
   * 月视图<br />
     ![Datetimepicker-1.png](http://upload-images.jianshu.io/upload_images/2597444-9e7fae338d8bd9af.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
