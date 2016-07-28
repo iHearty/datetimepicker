@@ -217,7 +217,7 @@
                right: 0;
             }
 
-            table thead td {
+            & > table:nth-child(1) {
                height: 40px;
             }
          }

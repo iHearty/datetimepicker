@@ -188,7 +188,7 @@
   left: 0;
   right: 0;
 }
-.datetimepicker .dtp-body .dtp-datetime-container .table-wrapper table thead td {
+.datetimepicker .dtp-body .dtp-datetime-container .table-wrapper > table:nth-child(1) {
   height: 40px;
 }
 .datetimepicker .dtp-body .dtp-datetime-container table {
