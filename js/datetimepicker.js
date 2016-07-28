@@ -188,7 +188,7 @@
          this.$minDisplay.attr('tabindex', 2).html(this._min);
          this.$secDisplay.attr('tabindex', 2).html(this._sec);
 
-         this.$hourDisplay.on('keyup mousewheel', function(evt) {
+         this.$hourDisplay.on('keydown mousewheel', function(evt) {
             var $this = $(this);
 
             if(evt.type == 'mousewheel' || evt.keyCode == 38 || evt.keyCode == 40) {
@@ -227,7 +227,7 @@
             }
          });
 
-         this.$minDisplay.on('keyup mousewheel', function(evt) {
+         this.$minDisplay.on('keydown mousewheel', function(evt) {
             var $this = $(this);
 
             if(evt.type == 'mousewheel' || evt.keyCode == 38 || evt.keyCode == 40) {
@@ -266,7 +266,7 @@
             }
          });
 
-         this.$secDisplay.on('keyup mousewheel', function(evt) {
+         this.$secDisplay.on('keydown mousewheel', function(evt) {
             var $this = $(this);
 
             if(evt.type == 'mousewheel' || evt.keyCode == 38 || evt.keyCode == 40) {
