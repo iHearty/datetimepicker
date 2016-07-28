@@ -412,7 +412,6 @@
       }
 
       var _this = this;
-      console.log(this.dtpView);
 
       if(this.dtpView == mnView) {
          if(!this.$mnView) {
