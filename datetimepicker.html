@@ -7,7 +7,6 @@
       <style>
          html {
             font-family: 'Microsoft YaHei';
-            background-color: #ECF0F1;
          }
 
          body {
@@ -19,7 +18,7 @@
          }
 
          .input-wrapper {
-            margin: 20px;
+            margin: 20px 0;
          }
 
          .input-wrapper input {
@@ -39,14 +38,17 @@
    <script type="text/javascript" src="js/datetimepicker.js"></script>
    <script type="text/javascript">
       $(".datetime").datetimepicker({
+            date: new Date('2016/05/30 12:00:00'),
             useTime: true,
             dtpView: 1,
-            min: new Date('2016/03/01 00:00:00')
+            min: new Date('2016/03/01 00:00:00'),
+            max: new Date('2016/11/01 00:00:00'),
+            autoClose: false
       }).on("datetime", function(evt) {
             $(this).val(evt.datetime);
             console.log($(this).data('datetimepicker'));
             $(this).data('datetimepicker').min = evt.datetime;
-            $(this).data('datetimepicker').dtpViewRender();
+            $(this).data('datetimepicker').dtpViewRender(true);
          });
    </script>
 </html>

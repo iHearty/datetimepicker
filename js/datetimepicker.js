@@ -68,7 +68,7 @@
    var baseTmpl = ''
       + '<div class="datetimepicker" tabindex="1" onselectstart="return false;" style="display: none;">'
       +    '<div class="dtp-header">'
-      +       '<div class="dtp-time" style="display: none;"><span class="dtp-hour">12</span>:<span class="dtp-min">54</span>:<span class="dtp-sec">30</span></div>'
+      +       '<div class="dtp-time" style="display: none;"><span class="dtp-hour"></span>:<span class="dtp-min"></span>:<span class="dtp-sec"></span></div>'
       +       '<div class="dtp-date"></div>'
       +    '</div>'
       +    '<div class="dtp-body">'
@@ -181,13 +181,12 @@
 
       if(this.useTime) {
          this.$timeDisplay.toggle(true);
-         var nd = new Date();
-         this._hour = nd.getHours();
-         this._min = nd.getUTCMinutes();
-         this._sec = nd.getSeconds();
-         this.$hourDisplay.attr('tabindex', 2);
-         this.$minDisplay.attr('tabindex', 2);
-         this.$secDisplay.attr('tabindex', 2);
+         this._hour = format(this.date, 'HH');
+         this._min = format(this.date, 'mm');
+         this._sec = format(this.date, 'ss');
+         this.$hourDisplay.attr('tabindex', 2).html(this._hour);
+         this.$minDisplay.attr('tabindex', 2).html(this._min);
+         this.$secDisplay.attr('tabindex', 2).html(this._sec);
 
          this.$hourDisplay.on('keyup mousewheel', function(evt) {
             var $this = $(this);
@@ -407,7 +406,11 @@
       this.$handleDatetimeDisplay.html(dt);
    }
 
-   var dtpViewRender = function() {
+   var dtpViewRender = function(force) {
+      if(force) {
+         this.dtClear();
+      }
+
       var _this = this;
       console.log(this.dtpView);
 
@@ -419,15 +422,16 @@
 
                   if(!$this.hasClass('disabled') && _this.dtpView == _this.initialize.dtpView) {
                      var evt = $.Event("datetime");
-                     evt.datetime = new Date(Number($this.attr('date')));
+                     var d = new Date(Number($this.attr('date')));
 
                      if(_this.useTime) {
-                        evt.datetime.setHours(Number(_this._hour), Number(_this._min), Number(_this._sec));
+                        d.setHours(Number(_this._hour), Number(_this._min), Number(_this._sec));
                      }
 
                      _this.$element.trigger(evt);
+                     evt.datetime = d;
                      _this.date = evt.datetime;
-                     _this.$mnView.find('td.selected').removeClass();
+                     _this.$mnView.find('td.selected').removeClass('selected');
                      $this.addClass('selected');
 
                      if(_this.autoClose) {
@@ -492,7 +496,7 @@
                      evt.datetime = new Date(Number($this.attr('date')));
                      _this.$element.trigger(evt);
                      _this.date = evt.datetime;
-                     _this.$yeView.find('td.selected').removeClass();
+                     _this.$yeView.find('td.selected').removeClass('selected');
                      $this.addClass('selected');
 
                      if(_this.autoClose) {
@@ -544,7 +548,7 @@
                      evt.datetime = new Date(Number($this.attr('date')));
                      _this.$element.trigger(evt);
                      _this.date = evt.datetime;
-                     _this.$deView.find('td.selected').removeClass();
+                     _this.$deView.find('td.selected').removeClass('selected');
                      $this.addClass('selected');
 
                      if(_this.autoClose) {
@@ -613,7 +617,7 @@
       this.max = options.max;
       this.min = options.min;
       this.container = options.container || "body";
-      this.autoClose = options.autoClose || true;
+      this.autoClose = options.autoClose === undefined ? true : options.autoClose;
       this.useTime = options.useTime || false;
       this.dtpView = options.dtpView || 1;
       this.$element = $(element);
