@@ -38,8 +38,11 @@
    <script type="text/javascript" src="js/lib/jquery-2.1.4.min.js"></script>
    <script type="text/javascript" src="js/datetimepicker.js"></script>
    <script type="text/javascript">
-      $(".datetime").datetimepicker({useTime: false, dtpView: 2})
-         .on("datetime", function(evt) {
+      $(".datetime").datetimepicker({
+            useTime: true,
+            dtpView: 1,
+            min: new Date('2016/03/01 00:00:00')
+      }).on("datetime", function(evt) {
             $(this).val(evt.datetime);
             console.log($(this).data('datetimepicker'));
             $(this).data('datetimepicker').min = evt.datetime;

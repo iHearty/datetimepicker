@@ -69,7 +69,7 @@
       + '<div class="datetimepicker" tabindex="1" onselectstart="return false;" style="display: none;">'
       +    '<div class="dtp-header">'
       +       '<div class="dtp-time" style="display: none;"><span class="dtp-hour">12</span>:<span class="dtp-min">54</span>:<span class="dtp-sec">30</span></div>'
-      +       '<div class="dtp-date">2016年3月15日, 星期二</div>'
+      +       '<div class="dtp-date"></div>'
       +    '</div>'
       +    '<div class="dtp-body">'
       +       '<div class="dtp-handler-container">'
@@ -174,6 +174,7 @@
    var init = function() {
       var _this = this;
       this.formatRender();
+      _this.$dateDisplay.html(format(new Date(), "yyyy年M月d日, EEE"));
 
       this.$baseNode.on('blur', function(evt) {
       });
@@ -609,8 +610,8 @@
    var Datetimepicker = function(element, options) {
       this.id = options.id || "";
       this.date = options.date || new Date();
-      this.max = options.max || new Date('2016-07-30 00:00:00');
-      this.min = options.min || new Date('2016-07-01 00:00:00');
+      this.max = options.max;
+      this.min = options.min;
       this.container = options.container || "body";
       this.autoClose = options.autoClose || true;
       this.useTime = options.useTime || false;
