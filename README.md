@@ -4,11 +4,11 @@ Github地址： https://github.com/iHearty/datetimepicker
 具体介绍如下：
 
 ######支持三种视图模式
-  * 月视图
+  * 月视图<br>
     ![Datetimepicker-1.png](http://upload-images.jianshu.io/upload_images/2597444-9e7fae338d8bd9af.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-  * 年视图
+  * 年视图<br>
 ![Datetimepicker-2.png](http://upload-images.jianshu.io/upload_images/2597444-d2b4b4b3c739145d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-  * 十年视图
+  * 十年视图<br>
 ![Datetimepicker-3.png](http://upload-images.jianshu.io/upload_images/2597444-1ce93e6c1fd424f7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ######如何使用？
