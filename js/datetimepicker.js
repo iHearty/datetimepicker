@@ -427,8 +427,8 @@
                         d.setHours(Number(_this._hour), Number(_this._min), Number(_this._sec));
                      }
 
-                     _this.$element.trigger(evt);
                      evt.datetime = d;
+                     _this.$element.trigger(evt);
                      _this.date = evt.datetime;
                      _this.$mnView.find('td.selected').removeClass('selected');
                      $this.addClass('selected');
