@@ -460,7 +460,7 @@
                .toggleClass('selected', formated == format(n, f))
                .toggleClass('dtp-tobefore', idx < offset)
                .toggleClass('dtp-toafter', idx >= offset + days)
-               .toggleClass('disabled', _this.max && n > _this.max || _this.min && n < _this.min);
+               .toggleClass('disabled', !!(_this.max && n > _this.max || _this.min && n < _this.min));
 
             n.setDate(n.getDate() + 1);
          });
@@ -518,7 +518,7 @@
                .toggleClass('selected', formated == format(n, f))
                .toggleClass('dtp-tobefore', idx < 2)
                .toggleClass('dtp-toafter', idx >= 14)
-               .toggleClass('disabled', _this.max && n > _this.max || _this.min && n < _this.min);;
+               .toggleClass('disabled', !!(_this.max && n > _this.max || _this.min && n < _this.min));;
 
             n.setMonth(n.getMonth() + 1);
          });
@@ -568,7 +568,7 @@
                .toggleClass('selected', n.getFullYear() == year)
                .toggleClass('dtp-tobefore', idx < 4)
                .toggleClass('dtp-toafter', idx >= 14)
-               .toggleClass('disabled', _this.max && n > _this.max || _this.min && n < _this.min);;
+               .toggleClass('disabled', !!(_this.max && n > _this.max || _this.min && n < _this.min));;
 
             n.setFullYear(n.getFullYear() + 1);
          });
@@ -601,7 +601,7 @@
    }
 
    var layout = function(top, left) {
-      var el = this.$element.position();
+      var el = this.$element.offset();
       var outerHeight = this.$element.outerHeight();
 
       this.$baseNode.css({
