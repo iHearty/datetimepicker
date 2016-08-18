@@ -50,15 +50,14 @@ Github地址： https://github.com/iHearty/datetimepicker
         min: 初始最大可选日期(此值可选)， 默认: 无
         autoClose: [Boolean] 是否再选择日期后自动关闭，默认: true
 
-* 事件监听
+  * 事件监听
   只有一个监听事件: datetime
 
       $(".datetime").datetimepicker().on("datetime", function(evt) {
          $(this).val(evt.datetime);
       });
 
-* 动态修改参数
-
+  * 动态修改参数
       $(".datetime").datetimepicker({
          useTime: true,
          autoClose: false
