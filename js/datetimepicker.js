@@ -602,11 +602,39 @@
 
    var layout = function(top, left) {
       var el = this.$element.offset();
-      var outerHeight = this.$element.outerHeight();
+      var elWidth = this.$element.outerWidth();
+      var elHeight = this.$element.outerHeight();
+      var dtWidth = this.$baseNode.outerWidth();
+      var dtHeight = this.$baseNode.outerHeight();
+      var docW = $(document).width();
+      var docH = $(document).height();
+
+      if(!top && !left) {
+         // 默认在下方显示，如果下方空间不够Datetimepicker的高度，先尝试右边，再上边，最后左边。
+         top = el.top + elHeight + 3
+         left = el.left;
+
+         if(docH - top - elHeight > dtHeight) {
+            top = top;
+            left = el.left;
+         }
+         else if(docW - el.left - elWidth > dtWidth) {
+            top = docH - dtHeight - 10;
+            left = el.left + elWidth + 3;
+         }
+         else if(el.top > dtHeight + 3) {
+            top = el.top - dtHeight - 3;
+            left = el.left;
+         }
+         else if(el.left > dtWidth + 3) {
+            top = docH - dtHeight - 10;
+            left = el.left - dtWidth - 3;
+         }
+      }
 
       this.$baseNode.css({
-         top: (top || el.top) + outerHeight + 3,
-         left: left || el.left
+         top: top,
+         left: left
       });
    }
 
