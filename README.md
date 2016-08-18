@@ -52,6 +52,7 @@ Github地址： https://github.com/iHearty/datetimepicker
 
 * 事件监听
   只有一个监听事件: datetime
+
       $(".datetime").datetimepicker().on("datetime", function(evt) {
          $(this).val(evt.datetime);
       });
