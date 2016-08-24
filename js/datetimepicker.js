@@ -173,7 +173,7 @@
 
    var init = function() {
       var _this = this;
-      this.formatRender();
+
       _this.$dateDisplay.html(format(new Date(), "yyyy年M月d日, EEE"));
 
       this.$baseNode.on('blur', function(evt) {
@@ -411,6 +411,7 @@
          this.dtClear();
       }
 
+      this.formatRender();
       var _this = this;
 
       if(this.dtpView == mnView) {
@@ -619,7 +620,7 @@
             left = el.left;
          }
          else if(docW - el.left - elWidth > dtWidth) {
-            top = docH - dtHeight - 10;
+            top = Math.min(el.top, docH - dtHeight - 10);
             left = el.left + elWidth + 3;
          }
          else if(el.top > dtHeight + 3) {
@@ -627,7 +628,7 @@
             left = el.left;
          }
          else if(el.left > dtWidth + 3) {
-            top = docH - dtHeight - 10;
+            top = Math.min(el.top, docH - dtHeight - 10);
             left = el.left - dtWidth - 3;
          }
       }
