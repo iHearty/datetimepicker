@@ -421,22 +421,23 @@
                   var $this = $(this);
 
                   if(!$this.hasClass('disabled') && _this.dtpView == _this.initialize.dtpView) {
-                     var evt = $.Event("datetime");
                      var d = new Date(Number($this.attr('date')));
 
                      if(_this.useTime) {
                         d.setHours(Number(_this._hour), Number(_this._min), Number(_this._sec));
                      }
 
-                     evt.datetime = d;
-                     _this.$element.trigger(evt);
-                     _this.date = evt.datetime;
-                     _this.$mnView.find('td.selected').removeClass('selected');
-                     $this.addClass('selected');
-
                      if(_this.autoClose) {
                         _this.toggle(false);
                      }
+
+                     _this.$mnView.find('td.selected').removeClass('selected');
+                     $this.addClass('selected');
+                     _this.date = d;
+
+                     var evt = $.Event("datetime");
+                     evt.datetime = _this.date;
+                     _this.$element.trigger(evt);
                   }
                });
          }
@@ -492,16 +493,17 @@
                         });
                   }
                   else if(!$this.hasClass('disabled') && _this.dtpView == _this.initialize.dtpView) {
-                     var evt = $.Event("datetime");
-                     evt.datetime = new Date(Number($this.attr('date')));
-                     _this.$element.trigger(evt);
-                     _this.date = evt.datetime;
-                     _this.$yeView.find('td.selected').removeClass('selected');
-                     $this.addClass('selected');
-
                      if(_this.autoClose) {
                         _this.toggle(false);
                      }
+
+                     _this.$yeView.find('td.selected').removeClass('selected');
+                     $this.addClass('selected');
+                     _this.date = new Date(Number($this.attr('date')));
+
+                     var evt = $.Event("datetime");
+                     evt.datetime = _this.date;
+                     _this.$element.trigger(evt);
                   }
                });
          }
@@ -544,16 +546,17 @@
                         });
                   }
                   else if(!$this.hasClass('disabled') && _this.dtpView == _this.initialize.dtpView) {
-                     var evt = $.Event("datetime");
-                     evt.datetime = new Date(Number($this.attr('date')));
-                     _this.$element.trigger(evt);
-                     _this.date = evt.datetime;
-                     _this.$deView.find('td.selected').removeClass('selected');
-                     $this.addClass('selected');
-
                      if(_this.autoClose) {
                         _this.toggle(false);
                      }
+
+                     _this.$deView.find('td.selected').removeClass('selected');
+                     $this.addClass('selected');
+                     _this.date = new Date(Number($this.attr('date')));
+
+                     var evt = $.Event("datetime");
+                     evt.datetime = _this.date;
+                     _this.$element.trigger(evt);
                   }
                });
          }
@@ -641,9 +644,46 @@
 
    var Datetimepicker = function(element, options) {
       this.id = options.id || "";
-      this.date = options.date || new Date();
-      this.max = options.max;
-      this.min = options.min;
+      var _max = options.max;
+
+      Object.defineProperty(this, 'max', {
+         get: function() {
+            return _max;
+         },
+         set: function(__max) {
+            _max = __max;
+            this.dtpViewRender(true);
+         }
+      });
+
+      var _min = options.min;
+
+      Object.defineProperty(this, 'min', {
+         get: function() {
+            return _min;
+         },
+         set: function(__min) {
+            _min = __min;
+            this.dtpViewRender(true);
+         }
+      });
+
+      var _date = options.date || new Date();
+
+      Object.defineProperty(this, 'date', {
+         get: function() {
+            return _date;
+         },
+         set: function(__date) {
+            _date = __date;
+            var _this = this;
+            setTimeout(function() {
+               _this.dtpViewDate = new Date(_date.getTime());
+               _this.dtpViewRender(true);
+            });
+         }
+      });
+
       this.container = options.container || "body";
       this.autoClose = options.autoClose === undefined ? true : options.autoClose;
       this.useTime = options.useTime || false;
