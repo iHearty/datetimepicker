@@ -379,6 +379,10 @@
       });
 
       $(document).on("click", function(evt) {
+         if(!_this.autoClose) {
+            return;
+         }
+
          if($(evt.target).closest(_this.$element).length) {
             return;
          }
