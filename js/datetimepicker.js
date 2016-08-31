@@ -356,7 +356,7 @@
             $handler = _this.$yeView;
          }
          else if(_this.dtpView == deView) {
-            _this.dtpViewDate.setFullYear(_this.dtpViewDate.getFullYear() - dir * 10);
+            _this.dtpViewDate.setFullYear(_this.dtpViewDate.getFullYear() + dir * 10);
             $handler = _this.$deView;
          }
 
