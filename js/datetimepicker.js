@@ -625,6 +625,10 @@
          if(docH - top - elHeight > dtHeight) {
             top = top;
             left = el.left;
+
+            if(docW - left < dtWidth) {
+               left = docW - (docW - el.left - elWidth) - dtWidth;
+            }
          }
          else if(docW - el.left - elWidth > dtWidth) {
             top = Math.min(el.top, docH - dtHeight - 10);
@@ -633,6 +637,10 @@
          else if(el.top > dtHeight + 3) {
             top = el.top - dtHeight - 3;
             left = el.left;
+
+            if(docW - left < dtWidth) {
+               left = docW - (docW - el.left - elWidth) - dtWidth;
+            }
          }
          else if(el.left > dtWidth + 3) {
             top = Math.min(el.top, docH - dtHeight - 10);
